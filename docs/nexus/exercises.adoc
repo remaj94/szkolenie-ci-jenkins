@@ -1,0 +1,86 @@
+= Zadania
+
+== Instalacja i konfiguracja
+
+=== Zadanie 1. Instalacja i uruchomienie Nexusa
+
+. Zainstaluj i uruchom Nexusa
+
+include::install-linux.adoc[leveloffset=3]
+include::first-configuration.adoc[leveloffset=3]
+
+[start=2]
+. Stwórz użytkownika, którego będzie używał Jenkins, możesz dać mu rolę `nx-admin`
+. Za pomocą credentiali zapisz poświadczenia w Jenkinsie
+. Stwórz plik konfiguracyjny do Nexusa w Jenkinsie (settings.xml z Mavena)
+
+=== Zadanie 2. Stwórz repozytoria w Nexus
+
+. Stwórz hostowane repozytorium Dockerowe
+. Stwórz hostowane repozytorium Mavena dla Snapshotów
+. Stwórz hostowane repozytorium Mavena dla Releasów
+
+=== Zadanie 3. Wrzucenie obrazu Dockerowego do Nexusa
+
+. Zmodyfikuj pipeline z modułu Połączmy to z Dockerem Zadanie 2, żeby nie tylko obraz był budowany, ale również wrzucany do Nexusa
+. Użyj tego samego pluginu
+. Użyj instrukcji `withCredentials` do przekazania credentiali
+
+[source,groovy]
+----
+pipeline {
+    agent any
+
+    stages {
+        stage('Clean') {
+            steps {
+                cleanWs()
+            }
+        }
+
+        stage('Checkout') {
+            steps {
+                git url: 'https://github.com/rechandler12/sages-tmobile-cicd.git'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                dir('docker-pipeline') {
+                    script {
+                        image = docker.build("example/example:latest")
+                    }
+                }
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                script {
+                    docker.withRegistry('registry', 'nexus') {
+                        image.push()
+                    }
+                }
+            }
+        }
+    }
+}
+----
+
+=== Zadanie 4. Wydanie wersji aplikacji mavenowej
+
+. Będziemy bazować na forku, który stworzyłeś w ramach modułu Pipeline wewnątrz repozytorium Zadanie 1
+. Stwórz pipeline o nazwie `example-release`
+. Spróbuj napisać pipeline, który wyda wersje aplikacji mavenowej. Musisz pamiętać o:
+* Zmianie pom.xml (dodanie sekcji `scm` i `distributionManagement`)
+* Daniu uprawnień do pushowania do GitHuba Jenkinsowi
+* Dodaniu 2 stagów w pipeline:
+** Start release (`mvn -B release:prepare`)
+** Finish release(`mvn -B release:perform`)
+
+=== Zadanie 5. Wydanie wersji aplikacji frontendowej
+
+. Utwórz podstawową aplikację Frontendową (np. Angularową)
+. Wrzuć ją do repozytorium
+. Stwórz od 0 pipeline do wydawania wersji
+. Dodaj parametr, w którym będzie można nadpisać wersję automatyczną

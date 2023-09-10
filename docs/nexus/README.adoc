@@ -1,0 +1,17 @@
+= Nexus
+
+== Opis
+
+Nexus – centralne miejsce do przechowywania artefaktów, które zostały zbudowane. Możemy przechowywać tam praktycznie każdy rodzaj oprogramowania, między innymi artefakty mavenowe, obrazy dockerowe, paczki Nugetowe.
+
+== Zastosowanie w CI/CD
+
+Nexus będzie znakomicie się sprawdzał jako uzupełnienie narzędzia do budowania kodu, jakim jest Jenkins. Dzięki połączeniu tych narzędzi możemy wgrywać zbudowane przez Jenkinsa paczki do Nexusa. Dzięki temu mamy centralne miejsce z artefaktami. Następnie z Nexusa możemy pobierać obrazy/paczki w trakcie wdrażenia, czy to standalone, czy też na Kubernetesa.
+
+== Alternatywy
+
+* https://jfrog.com/artifactory/[JFrog Artifactory]
+* https://about.gitlab.com/[GitLab]
+
+
+include::exercises.adoc[leveloffset=2]

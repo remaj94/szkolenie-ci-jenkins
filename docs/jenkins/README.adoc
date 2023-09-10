@@ -1,0 +1,45 @@
+= Jenkins
+
+== Opis
+
+Jenkins – serwer typu open source służący do automatyzacji związanej z tworzeniem oprogramowania. W szczególności ułatwia budowanie, testowanie i wdrażanie aplikacji, czyli umożliwia rozwój oprogramowania w trybie ciągłej integracji i ciągłego dostarczania
+
+Jenkins może być rozszerzony o wtyczki. Stanowią one dużą siłę tego rozwiązania, ponieważ domyślnie Jenkins posiada bardzo mało opcji. Mnogość wtyczek pozwala praktycznie dowolnie kształtować instalacje Jenkinsa. Z tego też powodu, instalacje między firmami, a nawet zespołami potrafią się znacząco różnić.
+
+== Architektura
+
+Architektura Jenkinsa to typowy master-slave. Mamy główny kontroler i dodatkowe hosty zwane Agentami. Agenci mogą być uruchomieni na dowolnej maszynie. Główny kontroler zleca wykonanie pracy konkretnemu agentowi. Oczywiście agent musi być w stanie wykonać daną operację. Jeżeli nie ma na nim zainstalowanego dockera, to nie będziemy mogli zbudować obrazu.
+
+.https://szkolajenkinsa.pl/2021/02/07/czym-jest-jenkins/
+image::jenkins_architecture.png[]
+
+== Pipeline
+
+W Jenkinsie możemy definiować joby na różne sposoby. Obecnie najefektywniejszy sposób to pipeline. Dzięki temu możemy łatwo go zmienić, powielić i utrzymywać go w repozytorium kodu. Jest to plik najczęściej nazywa się `Jenkinsfile`, który jest napisany w Groovym. Cała dokumentacja znajduje się https://www.jenkins.io/doc/book/pipeline/syntax/[tutaj].
+
+.Przykładowy pipeline
+[source,groovy]
+----
+pipeline {
+    agent none
+    stages {
+        stage('Example Build') {
+            agent { docker 'maven:3.9.0-eclipse-temurin-11' }
+            steps {
+                echo 'Hello, Maven'
+                sh 'mvn --version'
+            }
+        }
+        stage('Example Test') {
+            agent { docker 'openjdk:8-jre' }
+            steps {
+                echo 'Hello, JDK'
+                sh 'java -version'
+            }
+        }
+    }
+}
+----
+
+
+include::exercises.adoc[leveloffset=2]

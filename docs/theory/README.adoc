@@ -1,0 +1,46 @@
+= Podstawy teoretyczne
+
+== Czym jest CI/CD
+CI oznacza ciągłą integrację. W przeciwieństwie do praktyk starszych, w których kod potrafił być tygodniami lub miesiącami trzymany na osobnej gałęzi i nie był mergowany, podejście CI zakłada, że mergujemy kod tak często, jak to możliwe.
+
+Programowanie to praca zespołowa, nad jednym kodem może pracować kilka osób, kilka zespołów, a nawet kilka firm. Im szybciej zmiany zostaną zmergowane do głównych gałęzi. Dzięki takiemu podejściu wiemy, że kod się kompiluje. Dodatkowo narzędzia wspomagające CI powinny automatycznie uruchomić testy jednostkowe/integracyjne, żeby sprawdzić, że aplikacja nadal działa prawidłowo. Małe zmiany są łatwiejsze do przetestowania niż kod, który powstaje przez 6 miesięcy.
+
+CD oznacza ciągłe dostarczanie (delivery) lub wdrażanie (deployment). Zasadnicza różnica między tymi pojęciami jest taka, że ciągłe dostarczanie posiada kroki manualne, np. wdrożenie na produkcje, a ciągłe wdrażanie wszystkie kroki ma automatyczne.
+
+Zarówno jedno, jak i drugie polega na jak najczęstszym wydawaniu aplikacje na środowiska testowe i produkcyjne. Podobnie jak w podejściu CI im szybciej wdrożymy coś na środowisko, tym szybciej będziemy mogli to przetestować i sprawdzić, czy działa. Znowu — mała zmiana, łatwe testy.
+
+Dodatkowo CD będzie niezwykle pomocne w momencie, kiedy zmiana okazała się problematyczna. Dość łatwo będzie wykonać rollback takiej wersji.
+
+.https://www.synopsys.com/glossary/what-is-cicd.html
+image::cicd.svg[]
+
+== Korzyści
+
+* Lepsza jakość kodu
+* Szybsze dostarczanie nowych funkcjonalności
+* Automatyzacja procesów
+* Zmniejszenie kosztów
+* Uproszczony rollback zmian
+
+== Kim jest DevOps Engineer
+
+DevOps Engineer — osoba, która jednocześnie jest programistą i administratorem. Działa na przecięciu tych funkcji.
+
+DevOps zajmuje się tworzeniem pipelinów CI/CD, monitoringiem aplikacji i infrastruktury, tworzeniem i przygotowywaniem infrastruktury, automatyzacją procesów.
+
+== Narzędzia do CI/CD
+
+* https://www.jenkins.io/[Jenkins]
+* https://www.jetbrains.com/teamcity/[TeamCity]
+* https://circleci.com/[CircleCI]
+* https://about.gitlab.com/[GitLab]
+* https://www.atlassian.com/software/bamboo[Bamboo]
+
+.https://katalon.com/resources-center/blog/ci-cd-tools
+image::tools_matrix.png[]
+
+
+== Ekosystem narzędzi DevOps
+
+.https://www.harness.io/blog/continuous-delivery-tools
+image::tools_ecosystem.jpg[]

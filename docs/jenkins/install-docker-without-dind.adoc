@@ -1,0 +1,13 @@
+= Uruchomienie Jenkinsa za pomocą Dockera bez DinD
+
+. Uruchom Jenkinsa za pomocą Dockera
+[source,bash]
+----
+docker run --name jenkins-without-dind --restart=on-failure --detach \
+  --network jenkins \
+  --env DOCKER_CERT_PATH=/certs/client --env DOCKER_TLS_VERIFY=1 \
+  --publish 8081:8080 --publish 51000:50000 \
+  --volume jenkins-without-dind-data:/var/jenkins_home \
+  --volume jenkins-without-dind-docker-certs:/certs/client:ro \
+  jenkins/jenkins:2.401.1
+----

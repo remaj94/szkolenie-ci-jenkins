@@ -1,0 +1,8 @@
+= Pierwsza konfiguracja
+
+image::nexus_conf_2.png[]
+image::nexus_conf_3.png[]
+image::nexus_conf_4.png[]
+image::nexus_conf_5.png[]
+image::nexus_conf_6.png[]
+image::nexus_conf_7.png[]

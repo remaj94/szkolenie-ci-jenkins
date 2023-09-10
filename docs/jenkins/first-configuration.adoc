@@ -1,0 +1,7 @@
+= Pierwsza konfiguracja
+
+image::conf_1.png[]
+image::conf_2.png[]
+image::conf_3.png[]
+image::conf_4.png[]
+image::conf_5.png[]

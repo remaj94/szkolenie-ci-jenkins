@@ -1,0 +1,57 @@
+= Instalacja Jenkinsa w systemie Linux
+
+. Zainstaluj Javę za pomocą komend
+
+[source,bash]
+----
+sudo apt-get update
+sudo apt-get install openjdk-11-jre
+----
+
+[start=2]
+. Sprawdź instalację Javy za pomocą polecenia `java -version`. Oczekiwany rezultat
+
+[source,bash]
+----
+openjdk version "11.0.19" 2023-04-18
+OpenJDK Runtime Environment (build 11.0.19+7-post-Ubuntu-0ubuntu122.04.1)
+OpenJDK 64-Bit Server VM (build 11.0.19+7-post-Ubuntu-0ubuntu122.04.1, mixed mode, sharing)
+----
+
+[start=3]
+. Zainstaluj Jenkinsa za pomocą komend
+
+[source,bash]
+----
+curl -fsSL https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key | sudo tee \
+  /usr/share/keyrings/jenkins-keyring.asc > /dev/null
+echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] \
+  https://pkg.jenkins.io/debian-stable binary/ | sudo tee \
+  /etc/apt/sources.list.d/jenkins.list > /dev/null
+sudo apt-get update
+sudo apt-get install jenkins
+----
+
+[start=4]
+. Uruchom Jenkinsa i ustaw automatyczne uruchamianie przy restarcie maszyny
+
+[source,bash]
+----
+sudo systemctl enable jenkins
+sudo systemctl start jenkins
+----
+
+[start=5]
+. Sprawdź działanie Jenkinsa za pomocą komendy `sudo systemctl status jenkins`. Oczekiwany rezultat
+
+[source]
+----
+● jenkins.service - Jenkins Continuous Integration Server
+     Loaded: loaded (/lib/systemd/system/jenkins.service; enabled; vendor prese>
+     Active: active (running) since Thu 2023-06-08 12:14:44 CEST; 2h 22min ago
+----
+
+[start=6]
+. Wejdź na adres: http://localhost:8080/
+. Powinieneś otrzymać taką stronę image:unlock.png[]
+. Znajdź hasło administratora komendą `sudo cat /var/lib/jenkins/secrets/initialAdminPassword`

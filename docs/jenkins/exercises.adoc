@@ -1,0 +1,429 @@
+= Zadania
+
+== Instalacja i konfiguracja
+
+=== Zadanie 1. Instalacja i uruchomienie Jenkinsa bezpośrednio w systemie Linux
+
+. Zainstaluj i uruchom Jenkinsa
+
+include::install-linux.adoc[leveloffset=3]
+include::first-configuration.adoc[leveloffset=3]
+
+=== Zadanie 2. Instalacja i konfiguracja pluginów
+
+. Zainstaluj pluginy:
+* Git
+* Eclipse Temurin installer
+* Pipeline
+* Workspace Cleanup
+. Skonfiguruj narzędzia
+* Dodaj instaler JDK w wersji `jdk-17.0.7+7` i nazwij go `jdk-17`
+* Dodaj instaler Mavena w wersji `3.9.2` i nazwij go `maven-3`
+
+== Podstawowy Pipeline
+
+=== Zadanie 1. Uruchomienie pierwszego Pipeline
+
+. Stwórz nowy pipeline o nazwie `base-echo`
+. Jako pipeline wklej
+
+[source,groovy]
+----
+pipeline {
+    agent any
+
+    stages {
+        stage('Build') {
+            steps {
+                sh 'echo Hello World!'
+            }
+        }
+    }
+}
+----
+
+[start=3]
+. Uruchom pipeline
+. Sprawdź logi wykonania pipeline i sprawdź, czy pojawił się napis `Hello World!`
+
+=== Zadanie 2. Generowanie plików
+
+. Dodaj w pipeline z poprzedniego zadania utworzenie pliku z losową nazwą, np. `sh "uuidgen | xargs touch"`
+. Uruchom pipeline dwukrotnie
+. Sprawdź co znajduje się w workspace
+
+==== Rozwiązanie
+
+[source,groovy]
+----
+pipeline {
+    agent any
+
+    stages {
+        stage('Build') {
+            steps {
+                sh 'uuidgen | xargs touch'
+            }
+        }
+    }
+}
+----
+
+=== Zadanie 3. Wyczyszczenie Workspace
+
+. Zmodyfikuj pipeline z poprzedniego zadania, dodając krok czyszczący Workspace, używając pluginu Workspace Cleanup
+. Uruchom pipeline dwukrotnie
+. Sprawdź co znajduje się w workspace
+
+==== Rozwiązanie
+
+[source,groovy]
+----
+pipeline {
+    agent any
+
+    stages {
+        stage('Build') {
+            steps {
+                cleanWs()
+                sh 'uuidgen | xargs touch'
+            }
+        }
+    }
+}
+----
+
+=== Zadanie 4. Budowanie aplikacji Spring Boot
+
+. Stwórz nowy pipeline o nazwie `pet-clinic-build`
+. Na podstawie pipeline poprzedniego zadania stwórz pipeline, który za pomocą komendy `mvn clean verify` zbuduje projekt https://github.com/spring-projects/spring-petclinic[pet-clinic]
+
+==== Rozwiązanie
+[NOTE]
+Uwaga, w trakcie trwania szkolenia zmienił się projekt pet-clinic i teraz do budowania wymaga Dockera. Należy dodać użytkownika `jenkins` do grupy `docker`. W tym celu można użyć komendy: `sudo usermod -aG docker jenkins && sudo systemctl restart jenkins`
+
+[source,groovy]
+----
+pipeline {
+    agent any
+
+    stages {
+        stage('Build') {
+            steps {
+                cleanWs()
+                git branch: 'main', url: 'https://github.com/spring-projects/spring-petclinic.git'
+                sh 'mvn clean verify'
+            }
+        }
+    }
+}
+----
+
+=== Zadanie 5. Testy
+
+. Zmodyfikuj pipeline z poprzedniego zadania dodając do niego obsługę JUnit
+. Uruchom pipeline
+. Obejrzyj jak wyglądają testy JUnit
+. Zmień projekt, który budujesz na https://github.com/jglick/simple-maven-project-with-tests.git
+. Uruchom pipeline
+. Zobacz, jak wyglądają wyniki w momencie, kiedy część testów nie przechodzi
+
+==== Rozwiązanie
+[NOTE]
+Zmieniony projekt losowo przechodzi albo nie, więc czasami trzeba puścić więcej niż 1 pipeline, żeby zobaczyć efekt
+
+[source,groovy]
+----
+pipeline {
+    agent any
+
+    stages {
+        stage('Build') {
+            steps {
+                cleanWs()
+                git branch: 'main', url: 'https://github.com/spring-projects/spring-petclinic.git'
+                //git branch: 'master', url: 'https://github.com/jglick/simple-maven-project-with-tests.git'
+                sh 'mvn clean verify'
+            }
+        }
+    }
+
+    post {
+        always {
+            junit allowEmptyResults: true, testResults: '**/target/**/TEST-*.xml'
+        }
+    }
+}
+----
+
+=== Zadanie 6. Podział na stage
+
+. Napisany przez siebie pipeline z poprzedniego zadania podziel na 3 stage: ['Clean', 'Checkout', 'Build']
+
+==== Rozwiązanie
+
+[source,groovy]
+----
+pipeline {
+    agent any
+
+    stages {
+        stage('Clean') {
+            steps {
+                cleanWs()
+            }
+        }
+
+        stage('Checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/spring-projects/spring-petclinic.git'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                sh 'mvn clean verify'
+            }
+        }
+    }
+
+    post {
+        always {
+            junit allowEmptyResults: true, testResults: '**/target/**/TEST-*.xml'
+        }
+    }
+}
+----
+
+=== Zdanie 7. Notyfikacja na Slacku
+
+. Rozszerz napisany przez siebie pipeline z poprzedniego zadania o wysłanie notyfikacji na Slacku
+. Notyfikacje mają się wysyłać w momencie pozytywnego buildu/negatywnego/niestabilnego
+. Dodaj kanał na slacku o nazwie `jenkins-imie-nazwisko`
+. Uruchom pipeline
+. Sprawdź, czy notyfikacja została wysłana
+. Zmodyfikuj pipeline w taki sposób, żeby komunikat na Slacka zawierał parametry `BUILD_TAG` i `BUILD_URL`
+
+==== Rozwiązanie
+
+[source,groovy]
+----
+pipeline {
+    agent any
+
+    stages {
+        stage('Clean') {
+            steps {
+                cleanWs()
+            }
+        }
+
+        stage('Checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/spring-projects/spring-petclinic.git'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                sh 'mvn clean verify'
+            }
+        }
+    }
+
+    post {
+        always {
+            notify(":heart_eyes: build *${env.$BUILD_TAG}* has ended (<${env.BUILD_URL}|Open>)")
+            junit allowEmptyResults: true, testResults: '**/target/**/TEST-*.xml'
+        }
+    }
+}
+
+def notify(def color = 'good', def message) {
+    slackSend(
+            channel: 'jenkins-imie-nazwisko',
+            color: color,
+            message: message,
+            teamDomain: 'tmobile',
+            tokenCredentialId: 'slack-tmobile-token',
+            username: 'Jenkins-Backend'
+    )
+}
+----
+
+=== Zadanie 8. Zmienne środowiskowe
+
+. Stwórz nowy pipeline o nazwie `base-curl-with-credentials`
+. Wywołaj w nim `sh "curl -i https://httpbin.org/basic-auth/foo/bar"`
+. Uruchom pipeline
+. Sprawdź wynik
+. Dodaj credentiale user: `foo`, password: `bar`
+. Użyj credentiali jako zmienne środowiskowe
+. Adres również umieść w zmiennych środowiskowych
+. Wywołaj `curla` z autoryzacją `sh "curl -i -u 'user:pass' https://httpbin.org/basic-auth/foo/bar"`
+. Uruchom pipeline
+. Sprawdź logi
+. Doprowadź do sytuacji, kiedy Jenkins nie będzie zwracał warna
+. Zmień credentiale ze zmiennych środowiskowych na dyrektywę `withCredentials`
+. Uruchom pipeline
+
+==== Rozwiązanie
+
+[source,groovy]
+----
+pipeline {
+    agent any
+
+    environment {
+        CURL_CREDS = credentials('credentials')
+    }
+
+    stages {
+        stage('Build') {
+            steps {
+                sh 'curl -i -u "$CURL_CREDS_USR:$CURL_CREDS_PSW" https://httpbin.org/basic-auth/foo/bar'
+                withCredentials([usernamePassword(credentialsId: 'credentials', passwordVariable: 'password', usernameVariable: 'username')]) {
+                    sh 'curl -i -u "$username:$password" https://httpbin.org/basic-auth/foo/bar'
+                }
+            }
+        }
+    }
+}
+----
+
+=== Zadanie 9. Parametry wejściowe
+
+. Stwórz nowy pipeline o nazwie `base-echo-with-parameters`
+. Dodaj parametr wejściowy do pipeline
+. Wyświetl parametr wejściowy w konsoli (jak w Zadaniu 1)
+
+==== Rozwiązanie
+
+[source,groovy]
+----
+pipeline {
+    agent any
+
+    parameters {
+        string name: 'Example',
+                description: 'Example',
+                trim: true
+    }
+
+    stages {
+        stage('Build') {
+            steps {
+                sh "echo ${params.RELEASE}"
+            }
+        }
+    }
+}
+----
+
+== Pipeline wewnątrz repozytorium
+
+=== Zadania 1. Dodanie Pipeline do repozytorium
+
+. Zrób fork https://github.com/rechandler12/sages-tmobile-cicd-example[repozytorium]
+. Dodaj plik `Jenkinsfile` do repozytorium z zawartością z Zadania 7 z poprzedniego modułu
+. Stwórz pipeline o nazwie `example-build`
+. Uruchom pipeline
+
+=== Zadanie 2. Pipeline w osobnym repozytorium
+
+. Stwórz repozytorium na GitHub
+. Dodaj plik `Jenkinsfile` do repozytorium z zawartością z poprzedniego zadania
+. Stwórz pipeline o nazwie `example-external-build`, w którym konfiguracja będzie brana z repozytorium, które stworzyłeś, ale będzie budowany projekt, z poprzedniego zadania
+
+
+=== Zadanie 3. Warunkowe wykonanie kroków
+
+. Dodaj do pipeline klauzulę `when`, żeby wszystkie kroki były pomijane w momencie, jeśli ostatni commit zaczyna się od `[ci skip]`
+. Zrób commita zaczynającego się od `[ci skip]`
+. Uruchom pipeline
+. Sprawdź w logach czy kroki się wykonały
+
+=== Zadanie 4. SCM Skip Plugin
+
+. Zrób to samo co w poprzednim zadaniu, ale z użyciem pluginu SCM Skip
+
+== Połączmy to z Dockerem
+
+=== Zadanie 1. Zbuduj obraz Dockerowy za pomocą mavena
+
+. Stwórz nowy pipeline o nazwie `pet-clinic-build-docker`
+. Użyj pipeline z modułu Podstawowy Pipeline Zadanie 4 i zmień komendę z `mvn clean verify` na `mvn clean spring-boot:build-image`
+. Uruchom pipeline
+. Spójrz w logi spróbuj doprowadzić go do działania
+
+=== Zadanie 2. Zbuduj obraz Dockerowy za pomocą pluginu
+
+. Stwórz pipeline o nazwie `docker-simple-build`
+. Użyj Dockerfile z https://github.com/rechandler12/sages-tmobile-cicd katalog `docker-pipeline`
+. Zbuduj obraz dockerowy za pomocą pluginu https://plugins.jenkins.io/docker-workflow/[Docker Pipeline]
+
+=== Zadanie 3. Użyj Docker Agenta do zbudowania aplikacji pet-clinic
+
+. Stwórz pipeline o nazwie `pet-clinic-build-docker-without-dind`
+. Użyj pipeline z modułu Podstawowy Pipeline Zadanie 4
+. Usuń sekcję tools
+. Zmień sekcję agents, żeby użyć obrazu: `maven:3.9.2-eclipse-temurin-17`
+
+=== Zadanie 4. Użyj Docker Agenta do zbudowania obrazu Dockerowego aplikacji pet-clinic
+
+. Stwórz pipeline o nazwie `pet-clinic-build-docker-with-dind`
+. Użyj pipeline z poprzedniego zadania
+. Zmień komendę `mvn clean verify` na `mvn clean spring-boot:build-image`
+. Spróbuj doprowadzić do tego, żeby obraz się zbudował
+
+== Konfiguracja dodatkowego Workera
+
+=== Zadanie 1. Skonfigurowanie 2 dodatkowych Workerów
+
+. Zainstaluj plugin `Command Agent Luncher`
+. Dodaj 2 dodatkowe workery
+* Liczba executorów: 1
+* Labelki: `workerA` i `workerB`
+* Remote root directory: `/home/jenkins/agent`
+* Launch method: Launch agent via execution of command on the master
+* Launch command: `docker run -i --rm --name agent --init jenkins/agent java -jar /usr/share/jenkins/agent.jar`
+
+=== Zadanie 2. Wyłącz executory na masterach
+
+. Ustaw liczbę executorów na masterze na 0
+. Puść pipeline, które masz już skonfigurowane
+. Sprawdź, jaki jest efekt
+
+=== Zadanie 3. Uruchamianie budowania na konkretnym workerze
+
+. Znajdź pipeline, który zakończył się sukcesem
+. Ustaw sekcje `agent` na wybranie workera po odpowiedniej labelce
+. Uruchom pipeline
+. Sprawdź, czy faktycznie się uruchomił na danym workerze
+. Usuń worker z tą labelką
+. Ponownie uruchom pipeline
+. Jaki efekt otrzymałeś?
+
+
+
+// == Zadanie 2. Uruchomienie Jenkinsa za pomocą Dockera bez DinD
+//
+// . Uruchom Jenkinsa zgodnie z link:install-docker-without-dind.adoc[instrukcją]
+// . Wejdź na adres: http://localhost:8081/
+// . Powinieneś otrzymać taką stronę image:unlock.png[]
+// . Znajdź hasło administratora komendą `sudo docker exec jenkins-without-dind cat /var/jenkins_home/secrets/initialAdminPassword`
+// . Wykonaj wstępną konfigurację Jenkinsa zgodnie z link:first-configuration.adoc[instrukcją]
+//
+//
+// == Zadanie 3. Uruchomienie Jenkinsa za pomocą Dockera z DinD
+//
+// . Uruchom Jenkinsa zgodnie z link:install-docker-with-dind.adoc[instrukcją]
+// . Wejdź na adres: http://localhost:8082/
+// . Powinieneś otrzymać taką stronę image:unlock.png[]
+// . Znajdź hasło administratora komendą `sudo docker exec jenkins-with-dind cat /var/jenkins_home/secrets/initialAdminPassword`
+// . Wykonaj wstępną konfigurację Jenkinsa zgodnie z link:first-configuration.adoc[instrukcją]
+//
+//
+// sudo usermod -aG docker jenkins
+// restart
+//
