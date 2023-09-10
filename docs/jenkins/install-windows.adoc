@@ -1,0 +1,3 @@
+= Instalacja Jenkinsa w systemie Windows
+
+. Zainstaluj za pomocą tutoriala z oficjalnej strony https://www.jenkins.io/doc/book/installing/windows/

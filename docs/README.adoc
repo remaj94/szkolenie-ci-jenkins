@@ -1,8 +1,8 @@
-= Szkolenie CI/CD z wykorzystaniem Jenkinsa i GitLaba
+= Continuous Integration z wykorzystaniem Jenkins
 :author: Juliusz Marciniak
 :imagesdir: ./images
 
-Szkolenie z podstaw CI/CD. Po szkoleniu będziecie wiedzieć, czym jest CI/CD. Nauczycie się definiować pipeline w narzędziu Jenkins i GitLab.
+Continuous Integration (CI) to praktyka w dziedzinie rozwoju oprogramowania, która polega na regularnym, częstym łączeniu zmian dokonywanych przez programistów w centralnym repozytorium. Zdobędziecie wiedzę i umiejętności związane z implementacją tej praktyki przy użyciu narzędzia Jenkins, które jest jednym z popularnych narzędzi do automatyzacji procesów CI/CD.
 
 == O trenerze
 
@@ -22,30 +22,26 @@ Jestem programistą Java z 10-letnim stażem. W codziennej pracy zajmuję się t
 
 == Agenda
 === Dzień 1
-. Podstawy teoretyczne
-. Narzędzia do CI/CD — dlaczego wybieramy konkretne rozwiązania, GitLab/Bamboo/Jenkins
+. Wstęp do CI/CD
+. DevOps
+. Narzędzia CI/CD
 . Jenkins
-.. Podstawy teoretyczne
+.. Wprowadzenie
+.. Architektura
 .. Instalacja i konfiguracja
+.. Zadania
 .. Pluginy
-.. Deklarowanie pipeline
-. GitLab Runner
-.. Instalacja i konfiguracja
-.. Porównanie z Jenkinsem
-.. Deklarowanie pipeline
+.. Notyfikacje
+. Integracja z Git
+. Integracja z Maven
+. Definiowanie przepływu pracy przy pomocy kodu
 
 === Dzień 2
-. Nexus
-.. Podstawy teoretyczne
-.. Instalacja i konfiguracja
-. Integracja narzędzi w spójny sposób
-. Wstęp do CI/CD w chmurze
-
-=== Dzień 3
-[IMPORTANT]
-To są przykładowe problemy, możliwe, że części z nich nie zdążymy omówić, a może będziemy dokładać.
-
-. Warsztat na faktycznych problemach organizacji
+. Definiowanie przepływu pracy przy pomocy kodu
+. Testowanie
+. Jenkins security
+. Jenkins w kontekście Infrastruktury jako kodu (IaC)
+. Jenkins w kontekście pracy z AWS
 
 == Zasady
 * Staramy się nie spóźniać
@@ -61,7 +57,3 @@ To są przykładowe problemy, możliwe, że części z nich nie zdążymy omówi
 include::theory/README.adoc[leveloffset=1]
 
 include::jenkins/README.adoc[leveloffset=1]
-
-include::gitlab/README.adoc[leveloffset=1]
-
-include::nexus/README.adoc[leveloffset=1]

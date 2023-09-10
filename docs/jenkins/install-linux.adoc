@@ -4,7 +4,7 @@
 
 [source,bash]
 ----
-sudo apt-get update
+1
 sudo apt-get install openjdk-11-jre
 ----
 
