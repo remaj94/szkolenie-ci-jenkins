@@ -94,22 +94,12 @@ pipeline {
 . Stwórz nowy pipeline o nazwie `pet-clinic-build`
 . Na podstawie pipeline poprzedniego zadania stwórz pipeline, który za pomocą komendy `mvn clean verify` zbuduje projekt https://github.com/spring-projects/spring-petclinic[pet-clinic]
 
-// ==== Rozwiązanie
-// [NOTE]
-// Uwaga, w trakcie trwania szkolenia zmienił się projekt pet-clinic i teraz do budowania wymaga Dockera. Należy dodać użytkownika `jenkins` do grupy `docker`. W tym celu można użyć komendy: `sudo usermod -aG docker jenkins && sudo systemctl restart jenkins`
-
 === Zadanie 5. Testy
 
 . Zmodyfikuj pipeline z poprzedniego zadania dodając do niego obsługę JUnit
 . Uruchom pipeline
 . Obejrzyj jak wyglądają testy JUnit
-. Zmień projekt, który budujesz na https://github.com/jglick/simple-maven-project-with-tests.git
 . Uruchom pipeline
-. Zobacz, jak wyglądają wyniki w momencie, kiedy część testów nie przechodzi
-
-// ==== Rozwiązanie
-// [NOTE]
-// Zmieniony projekt losowo przechodzi albo nie, więc czasami trzeba puścić więcej niż 1 pipeline, żeby zobaczyć efekt
 
 === Zadanie 6. Podział na stage
 
