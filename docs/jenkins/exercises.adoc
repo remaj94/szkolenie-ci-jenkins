@@ -208,7 +208,7 @@ pipeline {
 
 === Zadanie 1. Skonfigurowanie 2 dodatkowych Workerów
 
-. Zainstaluj plugin `Command Agent Luncher`
+. Zainstaluj plugin `Command Agent Launcher`
 . Dodaj 2 dodatkowe workery
 * Liczba executorów: 1
 * Labelki: `workerA` i `workerB`
