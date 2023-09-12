@@ -1,11 +1,14 @@
 pipeline {
-    agent { docker { image 'maven:3.3.3' } }
-      stages {
-        stage('log version info') {
-      steps {
-        sh 'mvn --version'
-        sh 'mvn clean install'
-      }
+    agent any
+    stages {
+        stage('Test') {
+            steps {
+                git url 'https://github.com/remaj94/szkolenie-ci-jenkins' branch: 'main'
+                dir('docekr-pipeline') {
+                script {
+                    docker.build('myapp')
+            }
+                }        
+        }
     }
-  }
 }
