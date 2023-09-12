@@ -162,6 +162,19 @@ pipeline {
 
 . Zrób to samo co w poprzednim zadaniu, ale z użyciem pluginu SCM Skip
 
+=== Zadanie 5. Triggery
+
+. Dodaj do któregoś z poprzednich pipeline trigger, który będzie wywoływał ten pipeline co 1 minutę
+. Sprawdź efekty
+
+=== Zadanie 6. Active Choices i Scriptler
+
+. Zainstaluj plugin `Active Choices`
+. Zainstaluj plugin `Scriptler`
+. Stwórz aktywne pola wyboru
+. Możesz wzorować się na https://plugins.jenkins.io/uno-choice/#plugin-content-example, ale proponuję zrobić własne pola wyboru
+
+
 == Połączmy to z Dockerem
 
 === Zadanie 1. Zbuduj obraz Dockerowy za pomocą mavena
@@ -218,3 +231,9 @@ pipeline {
 . Usuń worker z tą labelką
 . Ponownie uruchom pipeline
 . Jaki efekt otrzymałeś?
+
+=== Terraform
+https://spacelift.io/blog/terraform-jenkins
+
+=== AWS
+https://www.jenkins.io/doc/tutorials/tutorial-for-installing-jenkins-on-AWS/
