@@ -4,7 +4,7 @@ pipeline {
         stage('Test') {
             steps {
                 git url 'https://github.com/remaj94/szkolenie-ci-jenkins' branch: 'main'
-                dir('docekr-pipeline') {
+                dir('docker-pipeline') {
                 script {
                     docker.build('myapp')
             }
