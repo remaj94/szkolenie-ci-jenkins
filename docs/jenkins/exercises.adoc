@@ -232,8 +232,8 @@ pipeline {
 . Ponownie uruchom pipeline
 . Jaki efekt otrzymałeś?
 
-=== Terraform
+== Terraform
 https://spacelift.io/blog/terraform-jenkins
 
-=== AWS
+== AWS
 https://www.jenkins.io/doc/tutorials/tutorial-for-installing-jenkins-on-AWS/
